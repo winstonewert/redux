@@ -11,18 +11,6 @@ class App extends Component {
     this.handleRefreshClick = this.handleRefreshClick.bind(this)
   }
 
-  componentDidMount() {
-    const { dispatch, selectedReddit } = this.props
-    dispatch(fetchPostsIfNeeded(selectedReddit))
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedReddit !== this.props.selectedReddit) {
-      const { dispatch, selectedReddit } = nextProps
-      dispatch(fetchPostsIfNeeded(selectedReddit))
-    }
-  }
-
   handleChange(nextReddit) {
     this.props.dispatch(selectReddit(nextReddit))
   }
@@ -32,7 +20,6 @@ class App extends Component {
 
     const { dispatch, selectedReddit } = this.props
     dispatch(invalidateReddit(selectedReddit))
-    dispatch(fetchPostsIfNeeded(selectedReddit))
   }
 
   render() {
@@ -83,18 +70,18 @@ App.propTypes = {
 function mapStateToProps(state) {
   const { selectedReddit, postsByReddit } = state
   const {
-    isFetching,
+    isInvalidated,
     lastUpdated,
     items: posts
   } = postsByReddit[selectedReddit] || {
-    isFetching: true,
+    isInvalidated: true,
     items: []
   }
 
   return {
     selectedReddit,
     posts,
-    isFetching,
+    isFetching: isInvalidated || !posts,
     lastUpdated
   }
 }

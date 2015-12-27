@@ -2,6 +2,7 @@ import { createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
 import rootReducer from '../reducers'
+import doReactions from '../reactions'
 
 const createStoreWithMiddleware = applyMiddleware(
   thunkMiddleware,
@@ -18,6 +19,8 @@ export default function configureStore(initialState) {
       store.replaceReducer(nextRootReducer)
     })
   }
+
+  doReactions(store);
 
   return store
 }
